@@ -1,0 +1,12 @@
+#------------NySQL---------------#
+host: localhost
+port: 3306
+database: playerdata
+user: root
+password: null
+#------------NySQL---------------#
+#-----------Ability--------------#
+身高最大值: 15
+挖掘速度最大值: 5
+移動速度最大值: 5
+#-----------Ability--------------#

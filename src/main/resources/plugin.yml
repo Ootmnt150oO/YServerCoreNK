@@ -1,0 +1,5 @@
+name: YServerCore
+version: 1.0
+author: YUZIOUO
+api: [1.0.8]
+main: Yuziouo.ServerCore.ServerCore
