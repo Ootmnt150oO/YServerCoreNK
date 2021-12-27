@@ -1,10 +1,8 @@
 package Yuziouo.ServerCore;
 
 import Yuziouo.ServerCore.AbilitySystem.Ability;
-import Yuziouo.ServerCore.AbilitySystem.AbilityListener;
+import Yuziouo.ServerCore.BodyStr.Strength;
 import Yuziouo.ServerCore.GradeSystem.Grade;
-import cn.nukkit.Player;
-import cn.nukkit.potion.Effect;
 
 import java.sql.*;
 import java.util.UUID;
@@ -68,9 +66,10 @@ public class MySQL {
         }
     }
 
-    public void loadPlayer(UUID uuid, Grade grade, Ability ability) {
+    public void loadPlayer(UUID uuid, Grade grade, Ability ability, Strength strength) {
         ServerCore.getPlugin().getGradeHashMap().put(uuid.toString(), grade);
         ServerCore.getPlugin().getAbilityHashMap().put(uuid.toString(), ability);
+        ServerCore.getPlugin().getStrengthHashMap().put(uuid.toString(),strength);
         try {
             ResultSet result = connection.createStatement().executeQuery("SELECT grade,exp FROM gradet WHERE uuid = '" + uuid.toString() + "'");
             if (result.next()) {

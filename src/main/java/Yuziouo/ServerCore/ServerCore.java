@@ -1,6 +1,8 @@
 package Yuziouo.ServerCore;
 
 import Yuziouo.ServerCore.AbilitySystem.*;
+import Yuziouo.ServerCore.BodyStr.Strength;
+import Yuziouo.ServerCore.BodyStr.StrengthListener;
 import Yuziouo.ServerCore.GradeSystem.Grade;
 import Yuziouo.ServerCore.GradeSystem.GradeCommand;
 import Yuziouo.ServerCore.GradeSystem.GradeForm;
@@ -21,6 +23,7 @@ import java.util.HashMap;
 public class ServerCore extends PluginBase implements Listener {
     private final HashMap<String, Grade> gradeHashMap = new HashMap<>();
     private final HashMap<String, Ability> abilityHashMap = new HashMap<>();
+    private final HashMap<String, Strength> strengthHashMap = new HashMap<>();
     private static ServerCore plugin;
     MySQL sql;
 
@@ -40,6 +43,7 @@ public class ServerCore extends PluginBase implements Listener {
         getServer().getPluginManager().registerEvents(new GradeListener(),this);
         getServer().getPluginManager().registerEvents(new AbilityForm(),this);
         getServer().getPluginManager().registerEvents(new AbilityListener(),this);
+        getServer().getPluginManager().registerEvents(new StrengthListener(),this);
         getServer().getCommandMap().register("grade",new GradeCommand());
         getServer().getCommandMap().register("ability",new AbilityCmd());
         getServer().getCommandMap().register("abilityop",new AbilityOpCmd());
@@ -57,6 +61,11 @@ public class ServerCore extends PluginBase implements Listener {
     public HashMap<String, Ability> getAbilityHashMap() {
         return abilityHashMap;
     }
+
+    public HashMap<String, Strength> getStrengthHashMap() {
+        return strengthHashMap;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void createDB(PlayerLocallyInitializedEvent event){
         Player player = event.getPlayer();
@@ -68,7 +77,7 @@ public class ServerCore extends PluginBase implements Listener {
         getServer().getScheduler().scheduleAsyncTask(this, new AsyncTask() {
             @Override
             public void onRun() {
-                sql.loadPlayer(player.getUniqueId(),new Grade(),new Ability());
+                sql.loadPlayer(player.getUniqueId(),new Grade(),new Ability(),new Strength());
             }
         });
         getServer().getScheduler().scheduleDelayedTask(this, new Runnable() {
@@ -87,6 +96,8 @@ public class ServerCore extends PluginBase implements Listener {
         Ability ability = ServerCore.getPlugin().getAbilityHashMap().get(player.getUniqueId().toString());
         player.setMaxHealth(20 + ability.getHealth());
         player.getEffects().clear();
+        ServerCore.getPlugin().getStrengthHashMap().get(player.getUniqueId().toString()).setMax(100);
+        ServerCore.getPlugin().getStrengthHashMap().get(player.getUniqueId().toString()).setStrength(ServerCore.getPlugin().getStrengthHashMap().get(player.getUniqueId().toString()).getMax());
         float sc = 1.0f + ((float) ability.getHigh() / 10f);
         player.setScale(sc);
         if (AbilityListener.speed.containsKey(player.getUniqueId().toString())) {
